@@ -1,30 +1,74 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div id="app">
+    <router-view></router-view>
+    <tabBar>
+
+      <tabBarItem path='/home'>
+        <template v-slot:item-img>
+          <img src="./assets/img/tabbar/首页-选中.png">
+        </template>
+        <template v-slot:item-img-active>
+          <img src="./assets/img/tabbar/首页-选中(1).png">
+        </template>
+        <template v-slot:item-text>
+          <p>首页</p>
+        </template>
+      </tabBarItem>
+
+      <tabBarItem path='/category'>
+        <template v-slot:item-img>
+          <img src="./assets/img/tabbar/分类.png">
+        </template>
+        <template v-slot:item-img-active>
+          <img src="./assets/img/tabbar/分类(1).png">
+        </template>
+        <template v-slot:item-text>
+          <p>分类</p>
+        </template>
+      </tabBarItem>
+
+      <tabBarItem path='/cart'>
+        <template v-slot:item-img>
+          <img src="./assets/img/tabbar/购物车.png">
+        </template>
+        <template v-slot:item-img-active>
+          <img src="./assets/img/tabbar/购物车(1).png">
+        </template>
+        <template v-slot:item-text>
+          <p>购物车</p>
+        </template>
+      </tabBarItem>
+
+      <tabBarItem path='/profile'>
+        <template v-slot:item-img>
+          <img src="./assets/img/tabbar/我的.png">
+        </template>
+        <template v-slot:item-img-active>
+          <img src="./assets/img/tabbar/我的(1).png">
+        </template>
+        <template v-slot:item-text>
+          <p>我的</p>
+        </template>
+      </tabBarItem>
+
+    </tabBar>
   </div>
-  <router-view/>
+  
 </template>
+<script>
+import tabBar from './components/common/tabbar/TabBar.vue'
+import tabBarItem from './components/content/TabBarItem.vue'
 
+
+export default {
+  el:'#app',
+  components:{
+    tabBar,
+    tabBarItem,
+    
+  }
+}
+</script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+@import url('assets/css/base.css');
 </style>
