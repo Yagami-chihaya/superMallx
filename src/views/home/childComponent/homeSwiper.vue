@@ -15,7 +15,7 @@ import {Swiper, SwiperItem} from '../../../components/common/swiper/index'
 export default {
   el: '',
   props:{
-    banners:String
+    banners:Array
   },
   data () {
     return {

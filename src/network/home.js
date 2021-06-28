@@ -5,5 +5,15 @@ export default {
     return request.createAxios({
       url:'/home/multidata'
     })
+  },
+  createGoodsRequest(type,page){
+    return request.createAxiosGoods({
+      url:'/home/data',
+      params:{
+        type,
+        page
+      }
+      
+    })
   }
 }

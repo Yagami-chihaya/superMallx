@@ -28,5 +28,6 @@ export default {
     right: 0;
     left: 0;
     background: rgb(211, 211, 211);
+    z-index: 3;
   }
 </style>
