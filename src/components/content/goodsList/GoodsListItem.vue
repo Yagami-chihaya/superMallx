@@ -1,14 +1,14 @@
 <template>
   <div class="goodsItem">
-    <div>
-      <a :href="goodsItem.link">
-        <img :src='goodsItem.show.img'>
+    <div @click='itemClick'>
+      
+        <img :src='chooseDate'>
         <div class="goodsInfo">
           <p class="title">{{goodsItem.title}}</p>
           <span class="price">￥{{goodsItem.price}}</span>
           <span class="colletion"><img src="../../../assets/img/home/collect_icon.png">收藏:{{goodsItem.cfav}}</span>
         </div>
-      </a>
+      
     </div>
   </div>
   
@@ -25,27 +25,41 @@ export default {
       
     }
   },
+  computed:{
+    chooseDate(){
+      return this.goodsItem.img || this.goodsItem.image || this.goodsItem.show.img
+      
+    }
+  },
   methods: {
-
+    
+    itemClick(){
+      if(this.goodsItem.iid != undefined){
+        this.$router.push('/detail/'+this.goodsItem.iid)
+      }
+     
+    }
   },
 }
 </script>
 
 <style>
   .goodsItem{
-    width:100%;
-    height: 350px;
+    display: block;
+    
     
   }
   .goodsItem>div{
-    height: 100%;
+    height: 350px;
+    width: 50vw;
+
     position: relative;
     
   }
   .goodsItem img{
     
     margin-left: 5px;
-    width: 150px;
+    width: 93.75%;
     border-radius: 10px;
   }
   .title{

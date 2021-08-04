@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-view v-slot="{ Component }">
+      <keep-alive keep-alive>
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
+    
     <tabBar>
 
       <tabBarItem path='/home'>

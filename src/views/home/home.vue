@@ -1,24 +1,29 @@
 <template>
   <div id="home" class="wrapper">
     
-      <navBar class="nav-bar">
+    <navBar class="nav-bar">
       
       <template v-slot:center><p>首页</p></template>
       
-      </navBar>
+    </navBar>
+
+    
+      
+
+    <tabcontrol class="tab-control-other" :titles="['流行','新款','精选']" @tabClick='tabClick' ref="tabcontrol1"  v-show="isTabShow"></tabcontrol>
 
 
-    <scroll class="content" ref="scroll">
+    <scroll class="content" ref="scroll" :probetype="3" :pullupload="true" :click="true" @getPosition='getPosition' @pullingUp='loadMore'>
       <home-swiper :banners="banners"></home-swiper>
-      <recommend-view :recommends="recommend"></recommend-view>
+      <recommend-view :recommends="recommend" :style="{backgroundColor:'white'}"></recommend-view>
 
-      <feature></feature>
-      <tabcontrol class="tab-control" :titles="['流行','新款','精选']" @tabClick='tabClick'></tabcontrol>
+      <feature :style="{backgroundColor:'white'}"></feature>
+      <tabcontrol class="tab-control" :titles="['流行','新款','精选']" @tabClick='tabClick' ref="tabcontrol2"></tabcontrol>
 
       <goods-list :goods="goods[currentType].list"></goods-list>
     </scroll>
     
-    <skip-top @click='skipTopClick'></skip-top>
+    <skip-top @click='skipTopClick' v-show="isShowTopSkip"></skip-top>
     
 
   </div>
@@ -26,7 +31,7 @@
 
 <script>
 
-import homeRequest from '../../network/home'   //导入首页数据组件
+import homeRequest from '../../network/home'   //导入首页数据
 
 import homeSwiper from '../home/childComponent/homeSwiper.vue'  //轮播图组件
 import navBar from '../../components/common/navBar/NavBar.vue'  //顶端功能栏组件
@@ -55,8 +60,11 @@ export default {
         'new':{page:0,list:[]},
         'sell':{page:0,list:[]}
       },
-      currentType:'pop'
-      
+      currentType:'pop',
+      isShowTopSkip:false,
+      tabOffsetTop:0,
+      isTabShow:false,
+      saveY:null
     }
   },
   
@@ -82,6 +90,53 @@ export default {
     this.getGoodsData('sell')
     
   },
+  mounted(){
+    setTimeout(()=>{this.tabOffsetTop = this.$refs.tabcontrol2.$el.offsetTop
+    ;}
+    ,2000)
+    
+  },
+  unmounted(){
+    console.log('home destroyed');
+  },
+  activated(){
+    console.log('启动:'+this.saveY);
+    
+    
+      
+    this.$refs.scroll.scroll.scrollTo(0,this.saveY,0)     //页面转换可能会自动跳回首页顶部
+    
+    var i = setInterval(() => {             //开启定时器检测是否跳回
+      
+      if(this.$refs.scroll.scroll.y==null){   //避免第一次挂载首页开启定时器
+
+        clearInterval(i)
+        console.log('定时器关闭...');
+      }
+
+      if(this.$refs.scroll.scroll.y!=this.saveY){        //检测是否发生了跳动
+        clearInterval(i)
+        console.log('定时器关闭...');
+        this.$refs.scroll.scroll.scrollTo(0,this.saveY,100)       //小概率失败返回原位置
+        setTimeout(() => {
+          if(this.$refs.scroll.scroll.y!=this.saveY){      //避免返回原位置失败，再次检测
+            this.$refs.scroll.scroll.scrollTo(0,this.saveY,0)
+          }
+        }, 1000);
+        
+      }
+      
+
+    }, 1000);
+
+    
+    
+    
+  },
+  deactivated(){
+    this.saveY = this.$refs.scroll.scroll.y
+    console.log('离开:'+this.saveY);
+  },
   methods: {
     getHomeData(){
       homeRequest.createHomeRequest()
@@ -103,6 +158,7 @@ export default {
       let page = this.goods[type].page+1
       homeRequest.createGoodsRequest(type,page)
       .then(value=>{
+        console.log(value);
         console.log(value.data.data.list);
         this.goods[type].list.push(...value.data.data.list)
         this.goods[type].page = page
@@ -122,6 +178,8 @@ export default {
             this.currentType = 'sell'
             break
         }
+        this.$refs.tabcontrol1.currentIndex = index
+        this.$refs.tabcontrol2.currentIndex = index
     },
 
     skipTopClick(){
@@ -130,6 +188,24 @@ export default {
       console.log(this.$refs.scroll.scroll);
       this.$refs.scroll.scroll.scrollTo(0,0,1000)
       
+    },
+
+    getPosition(position){     //获取滚动条y值并比较值
+      if(position.y < -1000){
+        this.isShowTopSkip = true
+      }
+      else{
+        this.isShowTopSkip = false
+      }   
+      
+      this.isTabShow = (position.y < -this.tabOffsetTop-44); 
+      
+    },
+
+    loadMore(){
+      this.getGoodsData(this.currentType)
+
+      this.$refs.scroll.scroll.refresh()  //重新计算 BetterScroll，当 DOM 结构发生变化的时候务必要调用确保滚动的效果正常
     }
   }
 }
@@ -143,17 +219,14 @@ export default {
     
   }
   .nav-bar{
-    background: pink;
+    background: rgb(255, 87, 115);
     color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
+    
   }
-  .tab-control{
-    position: sticky;
-    top: 44px;
+  .tab-control-other{
+    position: relative;
+    z-index: 5;
+    top: -44px;
   }
   .content{
     height: calc(100% - 93px);
@@ -164,4 +237,5 @@ export default {
     height: 100%;
     
   }
+  
 </style>
