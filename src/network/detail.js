@@ -1,24 +1,7 @@
 
 import request from './request'
-/*
-export default{
-  createDetailInfo(iid){
-    return request.createAxiosGoods({
-      url:'/detail',
-      params:{
-        iid
-      }
-    })
-  },
-  class goods{
-    construct(itemInfo,columns,services,shopInfo){
-      this.title = itemInfo.title
-      this.nowPrice = itemInfo.price,
-      this.highPrice = itemInfo.highPrice,
-    }
-  }
-}
-*/
+
+
 export function createDetailInfo(iid){
   return request.createAxiosGoods({
     url:'/detail',

@@ -2,7 +2,8 @@
   
     <swiper class="swiperBox">
       <swiper-item v-for='item in imgData' :key='item'>
-        <img :src="item">
+        <img :src="'http:'+item" :class="item">
+        
       </swiper-item>
     </swiper>
   
@@ -31,7 +32,11 @@ export default {
     SwiperItem,
     Swiper
     
+  },
+  created(){
+    console.log(this.imgData); 
   }
+  
 }
 </script>
 

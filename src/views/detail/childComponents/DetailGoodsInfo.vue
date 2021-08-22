@@ -8,7 +8,7 @@
 		<div class="img-list-wrap" v-for="item in detailInfo.detailImage" :key="item">
 			<div class="desc">{{item.key}}</div>
 			<div v-for="(item, index) in item.list" :key="index">
-				<img :src="item" alt="" class="img" @load="imgLoad">
+				<img :src="'http:'+item" alt="" class="img" @load="imgLoad">
 			</div>
 		</div>
 	</div>
